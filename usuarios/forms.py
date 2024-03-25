@@ -33,7 +33,6 @@ class CadastroForms(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Ex.: João Silva"
             }
         )
     )
@@ -45,7 +44,6 @@ class CadastroForms(forms.Form):
         widget=forms.EmailInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Ex.: joaosilva@xpto.com"
             }
         )
     )
@@ -57,7 +55,6 @@ class CadastroForms(forms.Form):
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Digite sua senha"
             }
         )
     )
@@ -69,7 +66,26 @@ class CadastroForms(forms.Form):
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Digite sua senha novamente"
             }
         )
     )
+
+    def clean_nome_cadastro(self):
+        nome = self.cleaned_data.get("nome_cadastro")
+
+        if nome:
+            nome = nome.strip()
+            if " " in nome:
+                raise forms.ValidationError("Nome não pode ter espaços")
+            else:
+                return nome
+
+    def clean_senha_2(self):
+        senha_1 = self.cleaned_data.get("senha_1")
+        senha_2 = self.cleaned_data.get("senha_2")
+
+        if senha_1 and senha_2:
+            if senha_1 != senha_2:
+                raise forms.ValidationError("Senhas não coincidem")
+            else:
+                return senha_2
